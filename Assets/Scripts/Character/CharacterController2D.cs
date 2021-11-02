@@ -22,6 +22,8 @@ public class CharacterController2D : MonoBehaviour
 	private Vector3 m_Velocity = Vector3.zero;
 	private bool m_isDoubleJumping = false;
 
+	public bool Grounded { get { return m_Grounded; } }
+
 	[Header("Events")]
 	[Space]
 
@@ -71,18 +73,18 @@ public class CharacterController2D : MonoBehaviour
 		Move(0, false, true);
 	}
 
-	public void Move(float move)
+	public void Move(float move, bool doFlip = true)
 	{
-		Move(move, false, false);
+		Move(move, false, false, doFlip);
 	}
 
-	public void CrouchMove(float move)
+	public void CrouchMove(float move, bool doFlip = true)
 	{
-		Move(move, true, false);
+		Move(move, true, false, doFlip);
 	}
 
 
-	public void Move(float move, bool crouch, bool jump)
+	public void Move(float move, bool crouch, bool jump, bool doFlip = true)
 	{
 		// If crouching, check to see if the character can stand up
 		if (!crouch)
@@ -97,7 +99,6 @@ public class CharacterController2D : MonoBehaviour
 		//only control the player if grounded or airControl is turned on
 		if (m_Grounded || m_AirControl)
 		{
-
 			// If crouching
 			if (crouch)
 			{
@@ -133,13 +134,13 @@ public class CharacterController2D : MonoBehaviour
 			m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
 
 			// If the input is moving the player right and the player is facing left...
-			if (move > 0 && !m_FacingRight)
+			if (move > 0 && !m_FacingRight && doFlip)
 			{
 				// ... flip the player.
 				Flip();
 			}
 			// Otherwise if the input is moving the player left and the player is facing right...
-			else if (move < 0 && m_FacingRight)
+			else if (move < 0 && m_FacingRight && doFlip)
 			{
 				// ... flip the player.
 				Flip();
