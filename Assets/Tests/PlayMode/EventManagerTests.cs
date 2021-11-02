@@ -37,7 +37,7 @@ public class EventManagerTests
 
         // should throw exception as listener no longer exists
         Assert.Throws<Exception>(delegate { EventManager.Broadcast(TEST_EVENT); });
-    }
+    } //end method ShouldRemoveEventListener
     
     [UnityTest]
     public IEnumerator ShouldRemoveAllEventListeners()
@@ -56,7 +56,7 @@ public class EventManagerTests
 
         // should throw exception as listeners no longer exists
         Assert.Throws<Exception>(delegate { EventManager.Broadcast(TEST_EVENT); });
-    }
+    } //end method ShouldRemoveAllEventListeners
     
     private void AddEventManagerToScene()
 	{
@@ -68,4 +68,4 @@ public class EventManagerTests
 	{
         Assert.Fail("Event should not have been responded to.");
 	} //end method NegativeListenerResponse
-}
+} //end class EventManagerTests
