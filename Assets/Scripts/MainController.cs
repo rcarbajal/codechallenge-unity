@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class MainController : MonoBehaviour
 {
-
 	#region Monobehaviour methods
 
 	#endregion

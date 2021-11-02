@@ -1,15 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using System;
 
 public class EventManager : MonoBehaviour
 {
-    public static class Events
+    public class Events
     {
 		public static readonly string RECYCLE_GROUND = "recycle_ground";
     } //end inner class Events
 
-    private Dictionary<string, UnityEvent> eventDictionary;
+    private class EventListenersData
+	{
+        public UnityEvent Event;
+        public int ListenerCount = 0;
+	}
+
+    private Dictionary<string, EventListenersData> eventDictionary;
 
     private static EventManager eventManager;
 
@@ -35,7 +42,7 @@ public class EventManager : MonoBehaviour
     private void Init()
     {
         if (eventDictionary == null)
-            eventDictionary = new Dictionary<string, UnityEvent>();
+            eventDictionary = new Dictionary<string, EventListenersData>();
     } //end method Init
 
     #endregion
@@ -44,36 +51,55 @@ public class EventManager : MonoBehaviour
 
     public static void AddEventListener(string eventName, UnityAction listener)
     {
-		if (Instance.eventDictionary.TryGetValue(eventName, out UnityEvent thisEvent))
-			thisEvent.AddListener(listener);
-		else
-		{
-			thisEvent = new UnityEvent();
-			thisEvent.AddListener(listener);
-			Instance.eventDictionary.Add(eventName, thisEvent);
-		} //end else
+        if (Instance.eventDictionary.TryGetValue(eventName, out EventListenersData thisData))
+        {
+            thisData.Event.AddListener(listener);
+            thisData.ListenerCount += 1;
+        }
+        else
+        {
+            thisData = new EventListenersData();
+            thisData.Event = new UnityEvent();
+            thisData.Event.AddListener(listener);
+            thisData.ListenerCount += 1;
+
+            Instance.eventDictionary.Add(eventName, thisData);
+        } //end else
     } //end method AddEventListener
 
     public static void RemoveEventListener(string eventName, UnityAction listener)
     {
         if (eventManager == null) return;
 
-        if (Instance.eventDictionary.TryGetValue(eventName, out UnityEvent thisEvent))
-            thisEvent.RemoveListener(listener);
+        if (Instance.eventDictionary.TryGetValue(eventName, out EventListenersData thisData))
+        {
+            thisData.Event.RemoveListener(listener);
+            thisData.ListenerCount -= 1;
+        }
     } //end method RemoveEventListener
 
 	public static void RemoveAllListeners(string eventName)
 	{
 		if (eventManager == null) return;
 
-		if (Instance.eventDictionary.TryGetValue(eventName, out UnityEvent thisEvent))
-			thisEvent.RemoveAllListeners();
+        if (Instance.eventDictionary.TryGetValue(eventName, out EventListenersData thisData))
+        {
+            thisData.Event.RemoveAllListeners();
+            thisData.ListenerCount = 0;
+        }
 	} //end method RemoveAllListeners
 
     public static void Broadcast(string eventName)
     {
-		if (Instance.eventDictionary.TryGetValue(eventName, out UnityEvent thisEvent))
-			thisEvent.Invoke();
+        if (Instance.eventDictionary.TryGetValue(eventName, out EventListenersData thisData))
+        {
+            if (thisData.ListenerCount > 0)
+                thisData.Event.Invoke();
+            else
+                throw new Exception("No listeners exist for event type: " + eventName);
+        } //end if
+        else
+            throw new Exception("No events exist for event type: " + eventName);
     } //end method Broadcast
 
     #endregion
