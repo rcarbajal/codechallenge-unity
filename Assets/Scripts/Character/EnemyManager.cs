@@ -6,10 +6,12 @@ public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private GameObject Spawner;
     [SerializeField] private GameObject[] GroundCells;
-    [SerializeField] private GameObject[] AirCells;
+    [SerializeField] private GameObject[] NormalAirCells;
+    [SerializeField] private GameObject[] OscillatingAirCells;
 
     private Queue<GameObject> groundCellsQueue = new Queue<GameObject>();
-    private Queue<GameObject> airCellsQueue = new Queue<GameObject>();
+    private Queue<GameObject> normalAirCellsQueue = new Queue<GameObject>();
+    private Queue<GameObject> oscillatingAirCellsQueue = new Queue<GameObject>();
     private float halfSpawnerHeight;
 
     private void Awake()
@@ -21,16 +23,25 @@ public class EnemyManager : MonoBehaviour
                 groundCellsQueue.Enqueue(obj);
                 obj.SetActive(false);
 			} //end foreach
-		} //end if
+        } //end if
 
-        if (AirCells != null && AirCells.Length > 0)
-		{
-            foreach(var obj in AirCells)
-			{
-                airCellsQueue.Enqueue(obj);
+        if (NormalAirCells != null && NormalAirCells.Length > 0)
+        {
+            foreach (var obj in NormalAirCells)
+            {
+                normalAirCellsQueue.Enqueue(obj);
                 obj.SetActive(false);
             } //end foreach
-		} //end if
+        } //end if
+
+        if (OscillatingAirCells != null && OscillatingAirCells.Length > 0)
+        {
+            foreach (var obj in OscillatingAirCells)
+            {
+                oscillatingAirCellsQueue.Enqueue(obj);
+                obj.SetActive(false);
+            } //end foreach
+        } //end if
 
         EventManager.AddEventListener(EventManager.Events.RECYCLE_GROUND, OnRecycleGround);
         EventManager.AddEventListener(EventManager.Events.GROUND_PLACED, OnGroundPlaced);
@@ -41,9 +52,11 @@ public class EnemyManager : MonoBehaviour
             RectTransform rt = Spawner.GetComponent<RectTransform>();
             halfSpawnerHeight = rt.rect.height / 2f;
 
-            foreach(var obj in AirCells)
+            foreach (var obj in NormalAirCells)
                 obj.transform.parent = Spawner.transform;
-		} //end if
+            foreach (var obj in OscillatingAirCells)
+                obj.transform.parent = Spawner.transform;
+        } //end if
     } //end method Awake
 
 	private void Start()
@@ -90,7 +103,10 @@ public class EnemyManager : MonoBehaviour
          * put air cell back into queue
          */
         GameObject airCell = (GameObject)data;
-        airCellsQueue.Enqueue(airCell);
+        if (airCell.tag == "NormalAirCell")
+            normalAirCellsQueue.Enqueue(airCell);
+        else
+            oscillatingAirCellsQueue.Enqueue(airCell);
         airCell.SetActive(false);
 	} //end method OnAirCellRecycle
 
@@ -102,7 +118,8 @@ public class EnemyManager : MonoBehaviour
             float randY = Random.Range(-halfSpawnerHeight, halfSpawnerHeight);
 
             // retrieve next air cell and place it
-            GameObject airCell = airCellsQueue.Dequeue();
+            bool doNormal = Random.Range(0, 2) == 0; //flip a coin
+            GameObject airCell = doNormal ? normalAirCellsQueue.Dequeue() : oscillatingAirCellsQueue.Dequeue();
             airCell.transform.localPosition = new Vector2(0, randY);
             airCell.SetActive(true);
 

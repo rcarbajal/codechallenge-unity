@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
-public class AirCancerController : MonoBehaviour
+public class NormalAirCancerController : MonoBehaviour
 {
     public float Speed = 25f;
-    private Rigidbody2D m_Rigidbody2D;
+    protected Rigidbody2D m_Rigidbody2D;
 
     private void Awake()
     {
@@ -19,9 +16,9 @@ public class AirCancerController : MonoBehaviour
         m_Rigidbody2D.velocity = targetVelocity;
     } //end method FixedUpdate
 
-	private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "AirRecycler")
             EventManager.Broadcast(EventManager.Events.RECYCLE_AIR_CELL, transform.gameObject);
     } //end method OnTriggerEnter2D
-} //end class AirCancerController
+}
