@@ -10,17 +10,17 @@ public class GroundMovementController : MonoBehaviour
 	private void Awake()
 	{
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
-    }
+    } //end method Awake
 
 	private void FixedUpdate()
     {
         Vector3 targetVelocity = new Vector2(-Speed * Time.fixedDeltaTime * 10f, m_Rigidbody2D.velocity.y);
         m_Rigidbody2D.velocity = targetVelocity;
-    }
+    } //end method FixedUpdate
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
         if (collision.gameObject.tag == "Recycler")
-            EventManager.Broadcast(EventManager.Events.RECYCLE_GROUND);
-	}
-}
+            EventManager.Broadcast(EventManager.Events.RECYCLE_GROUND, transform.gameObject);
+	} //end method OnTriggerEnter2D
+} //end class GroundMovementController

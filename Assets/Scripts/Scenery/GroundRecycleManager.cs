@@ -24,17 +24,12 @@ public class GroundRecycleManager : MonoBehaviour
 
 	private GameObject lastPlacedGround;
 
-	private System.Random rnd;
-
 	#region Monobehaviour methods
 
 	private void Awake()
 	{
 		EventManager.AddEventListener(EventManager.Events.RECYCLE_GROUND, this.Recycle);
-	}
 
-	private void Start()
-	{
 		/*
 		 * collect ground prefab instances into queues
 		 */
@@ -69,9 +64,11 @@ public class GroundRecycleManager : MonoBehaviour
 		} //end if
 
 		//initialize
-		rnd = new System.Random();
 		mainQueue = new Queue<GroundQueueHolder>();
+	}
 
+	private void Start()
+	{
 		//pick two ground objects and place them
 		GroundQueueHolder gqh = GetRandomGroundObject();
 		gqh.GroundObject.transform.localPosition = new Vector3(0, 0, 0);
@@ -84,6 +81,7 @@ public class GroundRecycleManager : MonoBehaviour
 		mainQueue.Enqueue(gqh);
 
 		lastPlacedGround = gqh.GroundObject;
+		EventManager.Broadcast(EventManager.Events.GROUND_PLACED, lastPlacedGround);
 	} //end method Start
 
 	#endregion
@@ -94,7 +92,7 @@ public class GroundRecycleManager : MonoBehaviour
 	{
 		GroundQueueHolder gqh;
 		GameObject obj;
-		int listNum = rnd.Next(1, 4);
+		int listNum = Random.Range(1, 4);
 		switch (listNum)
 		{
 			case 1:
@@ -134,7 +132,7 @@ public class GroundRecycleManager : MonoBehaviour
 		return gqh;
 	} //end method GetRandomGroundObject
 	
-	private void Recycle()
+	private void Recycle(object data)
 	{
 		//put back ground that has moved out of view
 		GroundQueueHolder gqh = mainQueue.Dequeue();
@@ -148,6 +146,7 @@ public class GroundRecycleManager : MonoBehaviour
 		mainQueue.Enqueue(gqh);
 
 		lastPlacedGround = gqh.GroundObject;
+		EventManager.Broadcast(EventManager.Events.GROUND_PLACED, lastPlacedGround);
 	} //end method Recycle
 
 	#endregion
