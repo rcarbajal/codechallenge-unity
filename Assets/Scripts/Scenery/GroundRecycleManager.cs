@@ -92,7 +92,7 @@ public class GroundRecycleManager : MonoBehaviour
 	{
 		GroundQueueHolder gqh;
 		GameObject obj;
-		int listNum = Utils.GetRandom(1, 3);
+		int listNum = Random.Range(1, 4);
 		switch (listNum)
 		{
 			case 1:

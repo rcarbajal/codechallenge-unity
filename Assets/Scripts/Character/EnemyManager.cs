@@ -1,11 +1,16 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
+    [SerializeField] private GameObject Spawner;
     [SerializeField] private GameObject[] GroundCells;
+    [SerializeField] private GameObject[] AirCells;
 
     private Queue<GameObject> groundCellsQueue = new Queue<GameObject>();
+    private Queue<GameObject> airCellsQueue = new Queue<GameObject>();
+    private float halfSpawnerHeight;
 
     private void Awake()
     {
@@ -18,11 +23,35 @@ public class EnemyManager : MonoBehaviour
 			} //end foreach
 		} //end if
 
+        if (AirCells != null && AirCells.Length > 0)
+		{
+            foreach(var obj in AirCells)
+			{
+                airCellsQueue.Enqueue(obj);
+                obj.SetActive(false);
+            } //end foreach
+		} //end if
+
         EventManager.AddEventListener(EventManager.Events.RECYCLE_GROUND, OnRecycleGround);
         EventManager.AddEventListener(EventManager.Events.GROUND_PLACED, OnGroundPlaced);
-    } //end method Start
+        EventManager.AddEventListener(EventManager.Events.RECYCLE_AIR_CELL, OnAirCellRecycle);
 
-    private void OnRecycleGround(object data)
+        if (Spawner != null)
+		{
+            RectTransform rt = Spawner.GetComponent<RectTransform>();
+            halfSpawnerHeight = rt.rect.height / 2f;
+
+            foreach(var obj in AirCells)
+                obj.transform.parent = Spawner.transform;
+		} //end if
+    } //end method Awake
+
+	private void Start()
+	{
+        StartCoroutine(SpawnAirCell());
+	} //end method Start
+
+	private void OnRecycleGround(object data)
     {
         /*
          * put ground cell back into queue if one exists
@@ -40,7 +69,7 @@ public class EnemyManager : MonoBehaviour
 
     private void OnGroundPlaced(object data)
     {
-        bool doAttachGroundCell = Utils.GetRandom(1, 3) == 2; // 33% chance of attaching a ground cell
+        bool doAttachGroundCell = Random.Range(1, 4) == 2; // 33% chance of attaching a ground cell
         if (doAttachGroundCell)
         {
             /*
@@ -49,37 +78,35 @@ public class EnemyManager : MonoBehaviour
 
             GameObject ground = (GameObject)data;
             GameObject groundCell = groundCellsQueue.Dequeue();
-
-            groundCell.transform.parent = ground.transform;
-            groundCell.transform.localPosition = GetRandomGroundPosition(ground);
+            GroundCancerController groundController = groundCell.GetComponent<GroundCancerController>();
+            groundController.Ground = ground;
             groundCell.SetActive(true);
-        }
+        } //end if
     } //end method OnGroundPlaced
 
-    private Vector3 GetRandomGroundPosition(GameObject ground)
-    {
-        GroundPositions positions = ground.GetComponent<GroundPositions>();
-        Vector3 pos = positions.Front.transform.localPosition;
+    private void OnAirCellRecycle(object data)
+	{
+        /*
+         * put air cell back into queue
+         */
+        GameObject airCell = (GameObject)data;
+        airCellsQueue.Enqueue(airCell);
+        airCell.SetActive(false);
+	} //end method OnAirCellRecycle
 
-        int posInt = Utils.GetRandom(1, 3);
-        switch(posInt)
-		{
-            case 1:
-                pos = positions.Front.transform.localPosition;
-                break;
-            case 2:
-                if (positions.Middle == null)
-                {
-                    posInt = Utils.GetRandom(1, 2);
-                    pos = posInt == 1 ? positions.Front.transform.localPosition : positions.Back.transform.localPosition;
-                } //end if
-                else pos = positions.Middle.transform.localPosition;
-                break;
-            case 3:
-                pos = positions.Back.transform.localPosition;
-                break;
-		} //end switch
+    private IEnumerator SpawnAirCell()
+	{
+        while (true)
+        {
+            // find random y position within spawner area
+            float randY = Random.Range(-halfSpawnerHeight, halfSpawnerHeight);
 
-        return pos;
-	} //end method GetRandomGroundPosition
+            // retrieve next air cell and place it
+            GameObject airCell = airCellsQueue.Dequeue();
+            airCell.transform.localPosition = new Vector2(0, randY);
+            airCell.SetActive(true);
+
+            yield return new WaitForSeconds(Random.Range(4f, 8f));
+        } //end while
+	} //end method SpawnAirCell
 } //end class EnemyManager

@@ -13,15 +13,34 @@ public class GroundCancerController : MonoBehaviour
 		{
             _ground = value;
             transform.parent = _ground.transform;
-            transform.position = Vector3.zero;
+            transform.localPosition = GetRandomGroundPosition(_ground);
 		}
 	}
 
-    private void Start()
+    private Vector3 GetRandomGroundPosition(GameObject ground)
     {
-    } //end method Start
+        GroundPositions positions = ground.GetComponent<GroundPositions>();
+        Vector3 pos = positions.Front.transform.localPosition;
 
-    private void Update()
-    {
-    } //end method Update
+        int posInt = UnityEngine.Random.Range(1, 4);
+        switch (posInt)
+        {
+            case 1:
+                pos = positions.Front.transform.localPosition;
+                break;
+            case 2:
+                if (positions.Middle == null)
+                {
+                    posInt = UnityEngine.Random.Range(1, 3);
+                    pos = posInt == 1 ? positions.Front.transform.localPosition : positions.Back.transform.localPosition;
+                } //end if
+                else pos = positions.Middle.transform.localPosition;
+                break;
+            case 3:
+                pos = positions.Back.transform.localPosition;
+                break;
+        } //end switch
+
+        return pos;
+    } //end method GetRandomGroundPosition
 } //end class GroundCancerController

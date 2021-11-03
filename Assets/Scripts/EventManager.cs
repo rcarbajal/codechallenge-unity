@@ -10,6 +10,7 @@ public class EventManager : MonoBehaviour
     {
 		public static readonly string RECYCLE_GROUND = "recycle_ground";
         public static readonly string GROUND_PLACED = "ground_placed";
+        public static readonly string RECYCLE_AIR_CELL = "recycle_air_cell";
     } //end inner class Events
 
     private Dictionary<string, UnityEvent> eventDictionary;
