@@ -12,13 +12,17 @@ public class PlayerController : MonoBehaviour
 	public BoxCollider2D Feet { get { return boxCollider; } }
 
 	private CharacterController2D controller;
+	private Rigidbody2D m_Rigidbody2D;
+	private Animator animator;
 
 	#region MonoBehaviour methods
 
 	void Start()
 	{
 		controller = GetComponent<CharacterController2D>();
-
+		m_Rigidbody2D = GetComponent<Rigidbody2D>();
+		animator = GetComponent<Animator>();
+		animator.SetBool("Grounded", controller.isGrounded);
 		EventManager.AddEventListener(EventManager.Events.PLAYER_FEET_HIT, (object value) => controller.Jump());
 	} //end method Start
 
@@ -31,8 +35,12 @@ public class PlayerController : MonoBehaviour
 			controller.Move(Speed * Time.fixedDeltaTime);
 		else if (Input.GetKey(KeyCode.A))
 			controller.Move(-Speed * Time.fixedDeltaTime);
-		else if (controller.Grounded)
+		else if (controller.isGrounded)
 			controller.Move(-28 * Time.fixedDeltaTime, false);
+
+		animator.SetBool("Grounded", controller.isGrounded);
+		animator.SetFloat("vSpeed", m_Rigidbody2D.velocity.y);
+		animator.SetFloat("hSpeed", m_Rigidbody2D.velocity.x);
 	} //end method Update
 	#endregion
 }
