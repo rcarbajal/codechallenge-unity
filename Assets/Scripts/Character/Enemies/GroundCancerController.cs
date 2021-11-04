@@ -15,7 +15,25 @@ public class GroundCancerController : MonoBehaviour
             transform.SetParent(_ground.transform);
             transform.localPosition = GetRandomGroundPosition(_ground);
 		}
-	}
+    }
+
+    protected int scoreValue = 1;
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+            if (collision.collider == player.Body)
+            {
+                EventManager.Broadcast(EventManager.Events.PLAYER_BODY_HIT, scoreValue);
+            } //end if
+            else
+            {
+                EventManager.Broadcast(EventManager.Events.PLAYER_FEET_HIT, scoreValue);
+            } //end else
+        } //end if
+    } //end method OnCollisionEnter2D
 
     private Vector3 GetRandomGroundPosition(GameObject ground)
     {
