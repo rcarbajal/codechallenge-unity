@@ -15,6 +15,25 @@ public class PlayerController : MonoBehaviour
 	private Rigidbody2D m_Rigidbody2D;
 	private Animator animator;
 
+	#region Public methods
+
+	public void Jump()
+	{
+		controller.Jump();
+	} //end method Jump
+
+	public void MoveLeft()
+	{
+		controller.Move(-Speed * Time.fixedDeltaTime);
+	} //end method MoveLeft
+
+	public void MoveRight()
+	{
+		controller.Move(Speed * Time.fixedDeltaTime);
+	} //end method MoveRight
+
+	#endregion
+
 	#region MonoBehaviour methods
 
 	void Start()
@@ -42,5 +61,6 @@ public class PlayerController : MonoBehaviour
 		animator.SetFloat("vSpeed", m_Rigidbody2D.velocity.y);
 		animator.SetFloat("hSpeed", m_Rigidbody2D.velocity.x);
 	} //end method Update
+
 	#endregion
 }
