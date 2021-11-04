@@ -53,9 +53,9 @@ public class EnemyManager : MonoBehaviour
             halfSpawnerHeight = rt.rect.height / 2f;
 
             foreach (var obj in NormalAirCells)
-                obj.transform.parent = Spawner.transform;
+                obj.transform.SetParent(Spawner.transform);
             foreach (var obj in OscillatingAirCells)
-                obj.transform.parent = Spawner.transform;
+                obj.transform.SetParent(Spawner.transform);
         } //end if
     } //end method Awake
 
