@@ -22,8 +22,6 @@ public class CharacterController2D : MonoBehaviour
 	private Vector3 m_Velocity = Vector3.zero;
 	private bool m_isDoubleJumping = false;
 
-	public bool Grounded { get { return m_Grounded; } }
-
 	[Header("Events")]
 	[Space]
 
