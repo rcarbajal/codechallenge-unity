@@ -12,7 +12,7 @@ public class GroundCancerController : MonoBehaviour
         set
 		{
             _ground = value;
-            transform.parent = _ground.transform;
+            transform.SetParent(_ground.transform);
             transform.localPosition = GetRandomGroundPosition(_ground);
 		}
 	}

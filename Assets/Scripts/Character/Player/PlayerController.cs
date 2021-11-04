@@ -1,9 +1,15 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController2D))]
-public class PlayerMovementController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
 	public float Speed = 50f;
+
+	[SerializeField] private CircleCollider2D circleCollider;
+	[SerializeField] private BoxCollider2D boxCollider;
+
+	public CircleCollider2D Body { get { return circleCollider; } }
+	public BoxCollider2D Feet { get { return boxCollider; } }
 
 	private CharacterController2D controller;
 
@@ -26,6 +32,5 @@ public class PlayerMovementController : MonoBehaviour
 		else if (controller.Grounded)
 			controller.Move(-28 * Time.fixedDeltaTime, false);
 	} //end method Update
-
 	#endregion
 }
