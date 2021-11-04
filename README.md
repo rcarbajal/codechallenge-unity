@@ -22,8 +22,8 @@ For this challenge, you will build a side-scrolling 2D mobile game that allows p
 ### API Setup
 We will keep this quite simple.
 
-- [ ] Fork this repository to your own GitHub account 
-- [ ] Setup and initialize a new Unity game application within the newly cloned repository
+- [X] Fork this repository to your own GitHub account 
+- [X] Setup and initialize a new Unity game application within the newly cloned repository
 
 _Note:_ You will be required to provide the repo URL to your fork of the code challenge. It is expected to be under your personal GitHub.com account. please make sure the repo is publicly accessible. Keep in mind, we want to see how you develop, this includes how you use Git in your development process.
 
@@ -39,21 +39,21 @@ _Where the fun really beings_
 
 ### Features
 - [ ] Player has a score that begins at 0
-- [ ] Player runs on ground
-- [ ] Player can jump
-- [ ] Player can double-jump
-- [ ] Cancer cells move on ground from right to left
-- [ ] Cancer cells can also move in the air from right to left
+- [X] Player runs on ground
+- [X] Player can jump
+- [X] Player can double-jump
+- [X] Cancer cells move on ground from right to left
+- [X] Cancer cells can also move in the air from right to left
 - [ ] When player lands on a cancer cell, the cell is destroyed and the score increases
 - [ ] When player runs into a cancer cell, the player loses some of their score
-- [ ] Ground continuously moves from right to left
-- [ ] Player can move right or left based on user input (you choose what the input will be)
-- [ ] Player should not be able to move off screen
+- [X] Ground continuously moves from right to left
+- [X] Player can move right or left based on user input (you choose what the input will be)
+- [X] Player should not be able to move off screen
 - [ ] Player actions should be animated (jumping, running, etc.)
-- [ ] Cancer cells should be animated (movement, pulsing, etc.)
-- [ ] Different types of cancer move at different rates
+- [X] Cancer cells should be animated (movement, pulsing, etc.)
+- [X] Different types of cancer move at different rates
 - [ ] Different types of cancer are worth different score amounts
-- [ ] Different types of cancer have different looks and animations
+- [X] Different types of cancer have different looks and animations
 - [ ] ... Now, go above and beyond. Add your additional features to this list
 
 ### Testing
