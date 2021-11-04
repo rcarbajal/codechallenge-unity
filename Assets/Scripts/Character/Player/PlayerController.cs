@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
 	void Start()
 	{
 		controller = GetComponent<CharacterController2D>();
+
+		EventManager.AddEventListener(EventManager.Events.PLAYER_FEET_HIT, (object value) => controller.Jump());
 	} //end method Start
 
 	private void Update()

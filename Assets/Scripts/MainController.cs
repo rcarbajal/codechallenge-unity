@@ -14,6 +14,7 @@ public class MainController : MonoBehaviour
 		EventManager.AddEventListener(EventManager.Events.PLAYER_BODY_HIT, (object value) =>
 		{
 			score -= (int)value;
+			if (score < 0) score = 0;
 			ScoreCountText.text = score.ToString();
 		});
 		EventManager.AddEventListener(EventManager.Events.PLAYER_FEET_HIT, (value) =>

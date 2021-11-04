@@ -8,9 +8,14 @@ public class NormalAirCancerController : MonoBehaviour
     protected Rigidbody2D m_Rigidbody2D;
     protected int scoreValue = 2;
 
+    private Animator animator;
+    private CircleCollider2D circleCollider;
+
     private void Awake()
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
+        animator = gameObject.GetComponent<Animator>();
+        circleCollider = gameObject.GetComponent<CircleCollider2D>();
     } //end method Awake
 
     private void FixedUpdate()
@@ -35,14 +40,19 @@ public class NormalAirCancerController : MonoBehaviour
                 EventManager.Broadcast(EventManager.Events.PLAYER_BODY_HIT, scoreValue);
 			} //end if
             else
-			{
+            {
+                circleCollider.enabled = false;
+                animator.SetTrigger("Death");
                 EventManager.Broadcast(EventManager.Events.PLAYER_FEET_HIT, scoreValue);
 			} //end else
 		} //end if
-	} //end method OnCollisionEnter2D
+    } //end method OnCollisionEnter2D
 
-	private void Die()
-	{
-        Debug.Log("Dying...");
-	}
-}
+    private void Hide()
+    {
+        gameObject.SetActive(false);
+        animator.SetTrigger("Start");
+        circleCollider.enabled = true;
+        EventManager.Broadcast(EventManager.Events.RECYCLE_AIR_CELL, transform.gameObject);
+    } //end method Hide
+} //end class NormalAirCancerController

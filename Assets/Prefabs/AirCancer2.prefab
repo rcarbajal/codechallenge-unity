@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1542490240323003729}
   - component: {fileID: 1542490240323003740}
   - component: {fileID: 1542490240323003741}
+  - component: {fileID: 4693683424865951737}
   m_Layer: 0
   m_Name: AirCancer2
   m_TagString: OscillatingAirCell
@@ -141,3 +142,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 25
   OscillateStrength: 2
+--- !u!95 &4693683424865951737
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1542490240323003728}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 01da5295fca9816478172974f55e973a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

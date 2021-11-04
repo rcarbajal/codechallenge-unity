@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GroundCancerController : MonoBehaviour
@@ -19,7 +16,16 @@ public class GroundCancerController : MonoBehaviour
 
     protected int scoreValue = 1;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private Animator animator;
+    private CircleCollider2D circleCollider;
+
+	private void Awake()
+    {
+        animator = gameObject.GetComponent<Animator>();
+        circleCollider = gameObject.GetComponent<CircleCollider2D>();
+    }
+
+	private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
@@ -30,6 +36,8 @@ public class GroundCancerController : MonoBehaviour
             } //end if
             else
             {
+                circleCollider.enabled = false;
+                animator.SetTrigger("Death");
                 EventManager.Broadcast(EventManager.Events.PLAYER_FEET_HIT, scoreValue);
             } //end else
         } //end if
@@ -61,4 +69,11 @@ public class GroundCancerController : MonoBehaviour
 
         return pos;
     } //end method GetRandomGroundPosition
+
+    private void Hide()
+	{
+        gameObject.SetActive(false);
+        animator.SetTrigger("Start");
+        circleCollider.enabled = true;
+    } //end method Hide
 } //end class GroundCancerController
